@@ -14,10 +14,22 @@ final class GroupController extends AbstractController
     public function index(EntityManagerInterface $entityManager): Response
     {
         $groups = $entityManager->getRepository(Group::class)->findAll();
-
+        var_export($groups, true);
         return $this->render('group/index.html.twig', [
             'groups' => $groups,
         ]);
+    }
+
+    #[Route('/group/add', name: 'app_group_show')]
+    public function add(EntityManagerInterface $entityManager): Response
+    {
+        $group = new Group();
+        $group->setName('Group 1');
+        $group->setArtists(['Artist 1', 'Artist 2']);
+        $group->setPopularSongs(['Song 1', 'Song 2 (Ahah Blur reference)']);
+        $entityManager->persist($group);
+        $entityManager->flush();
+        return new Response('Group was created');
     }
 
 }
